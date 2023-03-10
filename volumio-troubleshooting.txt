@@ -1,0 +1,14 @@
+
+
+/etc/mpd.conf
+/boot/config.txt
+/boot/cmdline.txt
+These may have changed - originals backed up....
+
+scp volumio@volumio.local:/boot/config.txt ./boot/config.txt;
+scp volumio@volumio.local:/boot/cmdline.txt ./boot/cmdline.txt;
+scp volumio@volumio.local:/etc/mpd.conf ./originals-/etc/mpd.conf;
+
+
+# Check the current version:
+curl -s 'volumio.local/api/v1/getSystemVersion'
