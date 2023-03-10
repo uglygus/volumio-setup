@@ -4,9 +4,6 @@
 #
 # run on remote machine after turning on the SSH server
 
-
-
-
 # Download image from here:
 # Echo - download the latest image
 # open https://volumio.com/en/get-started/
@@ -24,9 +21,9 @@ if nc -zv volumio.local 22; then
     echo Port 22\(ssh\) is OPEN on volumio.local
 else
     echo Port 22\(ssh\) is CLOSED on volumio.local
-    #Enable SSH in here... 
-    echo Enable SSH in the browser
+    echo Enable SSH in the browser at http://volumio.local/dev
     open http://volumio.local/dev
+    exit
 fi
 
 
@@ -50,59 +47,8 @@ echo -- Remove previous install of volumio-setup-local.sh
 ssh volumio@volumio.local "test -e /tmp/volumio-setup-local.sh | rm /tmp/volumio-setup-local.sh;"
 
 echo -- Copy volumio-setup-local.sh to volumio.local/tmp
-scp ./volumio-setup-local.sh | volumio@volumio.local/tmp
+scp ./volumio-setup-local.sh volumio@volumio.local:/tmp
 
 echo -- Run volumio-setup-local.sh on volumio.local
 ssh volumio@volumio.local "/tmp/volumio-setup-local.sh"
-
-
-
-
-if ssh volumio@volumio.local "test -e /home/volumio/raspi-power-button"; then
-    echo -- Remove previous install of volumio-autoplay
-    ssh volumio@volumio.local '/home/volumio/raspi-power-button/uninstall.sh; 
-                               rm -rf /home/volumio/raspi-power-button'
-    #ssh volumio@volumio.local 'rm -rf /home/volumio/raspi-power-button'
-fi
-
-if ssh volumio@volumio.local "test -e /home/volumio/volumio-autoplay"; then
-    echo -- Uninstall volumio-autoplay; 
-    ssh volumio@volumio.local '/home/volumio/raspi-volume-autoplay/uninstall.sh;
-                               rm -rf /home/volumio/raspi-volumio-autoplay'
-    #echo -- Remove volumio-autoplay
-    #$ssh volumio@volumio.local 'rm -rf /home/volumio/raspi-volumio-autoplay'
-fi
-
-#From my laptop Copy Power-button over
-echo -- Copying power-button to volumio@volumio.local
-scp -r /Users/tbatters/DM-Shared/code/raspi-power-button  volumio@volumio.local:/home/volumio
-
-#Copy auto-start
-echo -- Copying volumio-autoplay to volumio@volumio.local
-scp -r /Users/tbatters/DM-Shared/code/raspi-volumio-autoplay volumio@volumio.local:/home/volumio
-
-
-#SSH into Volume
-#ssh volumio@volumio.local
-
-# To watch logs while installing you could open this in a new terminal
-#journalctl -f
-
-#Install pip3
-if python3 -m pid; then
-    echo -- INSTALLING pip
-    ssh volumio@volumio.local 'sudo apt-get install -y python3-pip'
-else
-    echo pip is already installed!!
-fi
-
-echo -- apt-get autoremove
-ssh volumio@volumio.local 'sudo apt-get -y autoremove'
-
-echo -- Install Power Button
-ssh -t volumio@volumio.local sudo /home/volumio/raspi-power-button/install.sh
-
-echo -- Install Volumio-autoplay
-ssh -t volumio@volumio.local sudo /home/volumio/raspi-volumio-autoplay/install.sh
-
 
